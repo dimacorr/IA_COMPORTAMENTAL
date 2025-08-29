@@ -47,9 +47,8 @@ La documentación está dividida en dos visiones:
 
 ---
 
-#### 📌 En resumen: </br>
-El sistema transforma datos de comportamiento en señales cuantitativas, entrena un modelo, 
-lo valida con métricas objetivas y lo despliega para predecir en tiempo real.
+#### 📌 En resumen: El sistema transforma datos de comportamiento en señales cuantitativas, entrena un modelo, lo 
+valida con métricas objetivas y lo despliega para predecir en tiempo real.
 ---
 
 ## 🛠️ Prerrequisitos
@@ -61,8 +60,7 @@ Antes de ejecutar el proyecto, asegúrate de tener instalados los siguientes pro
 3. pip y psql 
 4. Git (opcional para clonar el repo)
 
-#### 📌 Importante: </br> 
-asegúrate de que Python y PostgreSQL estén en el PATH del sistema, sin importar si usas Windows, Linux o MacOS.
+#### 📌 Importante: asegúrate de que Python y PostgreSQL estén en el PATH del sistema, sin importar si usas Windows, Linux o MacOS.
 
 ---
 
