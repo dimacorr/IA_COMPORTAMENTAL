@@ -9,16 +9,15 @@ La documentación está dividida en dos visiones:
 ---
 
 ## 🚀 Visión Funcional (Negocio)
-1. **Objetivo**
+1. **Objetivo**</br>
    Detectar en tiempo real clientes o transacciones con patrones inusuales para prevenir actividades fraudulentas.
 2. **Beneficios**
    * Anticipar actividades fraudulentas antes de que ocurran. 
    * Disminuir falsos positivos (no bloquear clientes legítimos). 
    * Automatizar la detección en tiempo real, mejorando la seguridad y experiencia del cliente.
-
-**Ejemplo de uso**
-Si un cliente normalmente responde rápido en horarios laborales, pero de repente empieza a interactuar a medianoche 
-con grandes retrasos, el modelo lo marcará como alerta para revisión.
+2. **Ejemplo de uso**</br>
+   Si un cliente normalmente responde rápido en horarios laborales, pero de repente empieza a interactuar a medianoche  
+   con grandes retrasos, el modelo lo marcará como alerta para revisión.
 ---
 
 ## 🛠️ Visión Técnica (Flujo del Proyecto)
@@ -47,7 +46,9 @@ con grandes retrasos, el modelo lo marcará como alerta para revisión.
    * Garantiza coherencia entre entrenamiento y predicciones en producción.
 
 ---
-📌 **En resumen:** El sistema transforma datos de comportamiento en señales cuantitativas, entrena un modelo, 
+
+#### 📌 En resumen: </br>
+El sistema transforma datos de comportamiento en señales cuantitativas, entrena un modelo, 
 lo valida con métricas objetivas y lo despliega para predecir en tiempo real.
 ---
 
@@ -60,8 +61,8 @@ Antes de ejecutar el proyecto, asegúrate de tener instalados los siguientes pro
 3. pip y psql 
 4. Git (opcional para clonar el repo)
 
-📌 Importante: asegúrate de que Python y PostgreSQL estén en el PATH del sistema, sin importar si usas 
-Windows, Linux o MacOS.
+#### 📌 Importante: </br> 
+asegúrate de que Python y PostgreSQL estén en el PATH del sistema, sin importar si usas Windows, Linux o MacOS.
 
 ---
 
@@ -85,7 +86,7 @@ Sigue estos pasos para preparar el proyecto:
  psql -U <usuario> -d <nombre_base_datos> -f sql/schema.sql
 ```
 
-📌 **Nota:**
+#### 📌 Nota:
 * El usuario debe tener permisos para crear bases y tablas.
 * DATABASE_URL en `.env` debe apuntar a esta base de datos.
 
