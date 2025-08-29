@@ -263,7 +263,7 @@ Esperado en respuesta:
  * **Recall (Sensibilidad o Exhaustividad):** Proporción de positivos reales que fueron correctamente detectados 
    por el modelo. Mide la capacidad de detectar fraudes sin que se escapen.
  * **F1-Score:**  Métrica que combina precisión y recall en un solo valor armónico. Es útil cuando hay desbalance 
-   en las clases (fraude vs. no fraude).
+   en las clases (fraude vs. no fraude). </br>
    👉 Un F1-score alto significa que el modelo detecta la mayoría de fraudes sin generar demasiados falsos positivos.
  * **Threshold (Umbral de decisión):** Valor de corte de probabilidad para clasificar si una transacción es fraude (1) 
    o no (0). Un umbral más bajo detecta más fraudes, pero aumenta falsos positivos.
