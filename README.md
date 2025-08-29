@@ -1,24 +1,58 @@
-# 🔎 Proyecto de Detección de Fraude con IA Comportamental
+# 🔎 Proyecto: IA para Detección de Comportamiento Transaccional
+Este proyecto implementa un modelo de Machine Learning para la detección de transacciones sospechosas en función 
+del comportamiento del cliente. El objetivo es apoyar la detección temprana de fraude mediante el análisis de 
+variables transaccionales relevantes.
 
-Este proyecto implementa un modelo de **Machine Learning** para identificar comportamientos anómalos en transacciones de 
-clientes, con el objetivo de prevenir fraude y reducir riesgos operativos.
+## 🚀 Descripción del Proyecto
+El sistema toma datos transaccionales almacenados en PostgreSQL, los procesa y entrena un modelo de Machine Learning.
+El modelo entrenado se guarda en un archivo con Pickle y luego se utiliza para predecir en tiempo real si una nueva 
+transacción es legítima o sospechosa.
 
-La documentación está dividida en dos visiones:
-  * **Funcional:** Qué problema resuelve y el beneficio para la organización. 
-  * **Técnica:** Cómo funciona la solución y cómo desplegarla.
----
+####  ⚠️ Nota importante:
+* El modelo se aplica en tiempo real (predicción sobre cada nueva transacción).
+* El modelo no se reentrena en tiempo real; el reentrenamiento se hace en procesos batch programados. 
+* Para reentrenar en cada transacción se necesitaría un esquema de online learning, lo cual no es el caso actual.
 
-## 🚀 Visión Funcional (Negocio)
-1. **Objetivo**</br>
-   Detectar en tiempo real clientes o transacciones con patrones inusuales para prevenir actividades fraudulentas.
-2. **Beneficios**
-   * Anticipar actividades fraudulentas antes de que ocurran. 
-   * Disminuir falsos positivos (no bloquear clientes legítimos). 
-   * Automatizar la detección en tiempo real, mejorando la seguridad y experiencia del cliente.
-2. **Ejemplo de uso**</br>
-   Si un cliente normalmente responde rápido en horarios laborales, pero de repente empieza a interactuar a medianoche  
-   con grandes retrasos, el modelo lo marcará como alerta para revisión.
----
+## 📊 Variables utilizadas en el modelo
+* El modelo se alimenta de varias variables transaccionales clave:
+* Monto de la transacción (amount)
+* Tipo de transacción (tipo_transaccion)
+* Hora de la transacción (hora_decimal)
+* Canal de la transacción (channel_code)
+* Día de la semana (dia_semana)
+* Código de monitoreo (motor_monitoreo_map)
+* Tipo de alerta (alert_type)
+* Teléfono del cliente (client_mobilePhone)
+
+🔎 Estas variables permiten identificar patrones de normalidad y anormalidad en las transacciones.
+
+## 🧮 Modelo de Machine Learning
+Se utiliza un `RandomForestClassifier`, un algoritmo basado en múltiples árboles de decisión que:
+* Promedia la decisión de muchos árboles → más robustez.
+* Tolera variables ruidosas mejor que otros modelos.
+* Maneja bien datos categóricos y numéricos. 
+
+##### Ventajas
+* Buena precisión.
+* Resistente al overfitting en comparación con un solo árbol.
+* Capacidad de manejar muchas variables.
+
+##### Limitaciones
+* Si se incluyen muchas variables irrelevantes, puede introducir ruido.
+* Modelos más simples (ej: Regresión Logística) pueden ser más interpretables.
+* Modelos más avanzados (ej: XGBoost / LightGBM) pueden superar su precisión si se configuran bien.
+
+## ⚠️ Overfitting (Sobreajuste)
+El overfitting ocurre cuando el modelo "memoriza" los datos de entrenamiento en lugar de aprender patrones generales. </br>
+Esto significa que:
+* Funciona muy bien en el dataset de entrenamiento.
+* Falla cuando llegan transacciones nuevas (datos que no había visto antes).
+
+#### Cómo se mitiga:
+
+* Más datos de entrenamiento (más transacciones históricas).
+* Regularización del modelo (limitar la profundidad de árboles, número de árboles, etc.).
+* Selección de variables → usar solo las que realmente aportan.
 
 ## 🛠️ Visión Técnica (Flujo del Proyecto)
 1. **Carga de datos** 
@@ -45,50 +79,47 @@ La documentación está dividida en dos visiones:
    * Se almacenan las features en: `models/features.pkl.`
    * Garantiza coherencia entre entrenamiento y predicciones en producción.
 
----
-
 #### 📌 En resumen: El sistema transforma datos de comportamiento en señales cuantitativas, entrena un modelo, lo 
 valida con métricas objetivas y lo despliega para predecir en tiempo real.
----
 
 ## 🛠️ Prerrequisitos
-
 Antes de ejecutar el proyecto, asegúrate de tener instalados los siguientes programas:
-
 1. Python 3.10+ 
 2. PostgreSQL 
 3. pip y psql 
 4. Git (opcional para clonar el repo)
 
-#### 📌 Importante: asegúrate de que Python y PostgreSQL estén en el PATH del sistema, sin importar si usas Windows, Linux o MacOS.
+#### 📌 Importante: asegúrate de que Python y PostgreSQL estén en el PATH del sistema, sin importar si usas Windows, 
+Linux o MacOS.
 
----
+## 🚀 Instalación y requisitos
+1. **Clonar el repositorio:**
+```bash
+  git clone https://github.com/tu-repo/IA_COMPORTAMENTAL.git
+  cd IA_COMPORTAMENTAL
+```
 
-## 🏗️ Configuración del entorno
-Sigue estos pasos para preparar el proyecto:
-
-1. **Crear entorno virtual:**
+2. **Crear entorno virtual:**
 ```powershell
  python -m venv .venv
  .venv\Scripts\activate      # Windows
  # source .venv/bin/activate # Linux/Mac
 ```
 
-2. **Instalar dependencias:**
+3. **Instalar dependencias:**
 ```powershell
  pip install -r requirements.txt
 ```
 
-3. **Crear base de datos y tablas:**
+4. **Crear base de datos y tablas:**
 ```bash
  psql -U <usuario> -d <nombre_base_datos> -f sql/schema.sql
 ```
 
-#### 📌 Nota:
-* El usuario debe tener permisos para crear bases y tablas.
-* DATABASE_URL en `.env` debe apuntar a esta base de datos.
+#### 📌 Nota: Antes de ejecutar el proyecto, asegúrate de tener PostgreSQL corriendo localmente, 
+de crear la base de datos, las tablas necesarias, y ejecutar el script SQL incluido
 
-4. **Configurar `.env:`**
+5. **Configurar `.env:`**
 ```powershell
  DATABASE_URL=postgresql://user:password@host:port/db
  MODEL_DIR=models
@@ -100,19 +131,17 @@ Sigue estos pasos para preparar el proyecto:
  python -m scripts.train
 ```
 
-6. **Ejecutar aplicación:**  
+6. **Levantar API con FastAPI:**  
 ```bash
  uvicorn main:app --reload
 ```
 
-Endpoint de predicción:
+Documentación interactiva:
 ```bash
  POST http://127.0.0.1:8000/predict
 ```
----
 
 ## 📦 Estructura del proyecto
-
 ```powershell
 ia_comportamental/
 ├── README.md
@@ -149,7 +178,7 @@ ia_comportamental/
         ├── test_feature_engineering.py
         └── test_predict_response.py
 ```
----
+
 ## 🧪 Ejemplo de inferencia
 
 Payload de prueba (No Fraude):
@@ -216,7 +245,7 @@ Esperado en respuesta:
     }
 }
 ```
----
+
 ## 📖 Glosario de términos clave
  * **Machine Learning:** Rama de la inteligencia artificial que permite a los sistemas aprender de los datos y hacer 
    predicciones sin ser programados explícitamente. En este proyecto se utiliza para detectar patrones de 
@@ -238,8 +267,24 @@ Esperado en respuesta:
    👉 Un F1-score alto significa que el modelo detecta la mayoría de fraudes sin generar demasiados falsos positivos.
  * **Threshold (Umbral de decisión):** Valor de corte de probabilidad para clasificar si una transacción es fraude (1) 
    o no (0). Un umbral más bajo detecta más fraudes, pero aumenta falsos positivos.
+ * **Arquitectura Limpia (Clean Architecture):** Patrón de diseño que organiza el proyecto en capas separando lógica de 
+   negocio (domain, usecases) de la infraestructura y adaptadores. Permite mayor mantenibilidad y escalabilidad.
 
----
+## ❓ Explicación del Modelo (FAQ)
+1. **¿Qué pasa si agrego variables no relevantes o muy relevantes?**
+* No relevantes → generan ruido, pueden bajar la precisión del modelo.
+* Relevantes → mejoran el desempeño porque aportan más señales útiles.
+2. **¿Cómo puedo jugar con las variables?**
+* Agregar o quitar variables en feature_engineering.py.
+* Probar diferentes combinaciones de features.
+* Evaluar importancia de variables con el propio Random Forest.
+3. **¿El modelo mejora con más información?**
+Sí. Más registros históricos permiten al modelo aprender mejor, generalizar y reducir sesgos.
+4. **¿Cómo se estandarizan los datos?**
+En este proyecto no aplicamos normalización numérica, ya que el algoritmo Random Forest no depende de la escala de los datos.
+Lo que sí realizamos es feature engineering y preprocesamiento, transformando variables categóricas a numéricas, 
+generando nuevas variables derivadas y limpiando los datos antes del entrenamiento.
+
 ## ✅ Notas finales
  * Activa el entorno virtual antes de usar scripts o FastAPI. 
  * Ajusta el `.env` según tu configuración. 
