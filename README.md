@@ -1,125 +1,117 @@
-# Flujo del proyecto de detección de fraude con IA Comportamental
+# 🔎 Proyecto de Detección de Fraude con IA Comportamental
 
-Este proyecto implementa un modelo de Machine Learning que analiza patrones de comportamiento de los clientes frente a 
-notificaciones transaccionales, con el fin de identificar posibles fraudes.
+Este proyecto implementa un modelo de **Machine Learning** para identificar comportamientos anómalos en transacciones de 
+clientes, con el objetivo de prevenir fraude y reducir riesgos operativos.
 
+La documentación está dividida en dos visiones:
+  * **Funcional:** Qué problema resuelve y el beneficio para la organización. 
+  * **Técnica:** Cómo funciona la solución y cómo desplegarla.
 ---
-## 🚀 Flujo General
+
+## 🚀 Visión Funcional (Negocio)
+1. **Objetivo**
+   Detectar en tiempo real clientes o transacciones con patrones inusuales para prevenir actividades fraudulentas.
+2. **Beneficios**
+   * Anticipar actividades fraudulentas antes de que ocurran. 
+   * Disminuir falsos positivos (no bloquear clientes legítimos). 
+   * Automatizar la detección en tiempo real, mejorando la seguridad y experiencia del cliente.
+
+**Ejemplo de uso**
+Si un cliente normalmente responde rápido en horarios laborales, pero de repente empieza a interactuar a medianoche 
+con grandes retrasos, el modelo lo marcará como alerta para revisión.
+---
+
+## 🛠️ Visión Técnica (Flujo del Proyecto)
 1. **Carga de datos** 
    * **Fuente:** base de datos Postgres (envios_cliente, transacciones). 
-   * Los registros contienen información clave: cliente, transacción, hora de envío, canal utilizado, 
-   y respuesta (si existió).
-2. **Ingeniería de características (Feature Engineering)**
-   * Hora del envío en formato numérico. 
-   * Día de la semana de la transacción.
-   * Retraso entre el envío y la respuesta.
-   * Tasa de respuesta del cliente.
-   * Indicadores de comportamiento inusual (ej. respuestas demasiado tardías o ausencia de respuesta).<br>
-   👉 Este paso permite que el modelo “entienda” mejor los datos y capture patrones de riesgo.
+   * **Campos clave:** cliente, transacción, hora de envío, canal, respuesta.
+2. **Feature Engineering (ingeniería de características)**
+   * Conversión de hora a valores numéricos. 
+   * Días de la semana.
+   * Retraso entre envío y respuesta.
+   * Tasas de respuesta.
+   * Flags de comportamiento inusual (ej. respuestas demasiado tardías). <br>
+   👉 Permite que el modelo capture patrones de riesgo de forma cuantitativa.
 3. **Entrenamiento del modelo**
-   * Algoritmo: RandomForestClassifier balanceado para manejar clases desiguales.
-   * Objetivo de clasificación:
+   * **Algoritmo:** `RandomForestClassifier` con balanceo de clases.
+   * **Variable objetivo:**
      * `1` → Transacción sospechosa (alerta o declinada).
-     * `0` → Transacción normal (confirmada o sin problema).
+     * `0` → Transacción normal (confirmada).
 4. **Evaluación del rendimiento**
-   * **ROC AUC:** mide la capacidad del modelo para distinguir entre fraude y no fraude.
-   * **Reporte de clasificación:** incluye precisión, recall y F1-score.<br>
-     👉 Estas métricas permiten validar objetivamente la calidad del modelo.
+   * **ROC AUC: ** mide la capacidad para distinguir fraude de no fraude
+   * **Reporte de clasificación: ** precisión, recall y F1-score.<br>
+     👉 Métricas que aseguran objetivamente la calidad del modelo.
 5. **Persistencia del modelo**
-   * Se guarda el modelo entrenado en `models/model.pkl.`
-   * Se almacenan las variables usadas (`features.pkl`) para asegurar coherencia entre entrenamiento y predicción.
+   * El modelo entrenado se guarda en: `models/model.pkl.`
+   * Se almacenan las features en: `models/features.pkl.`
+   * Garantiza coherencia entre entrenamiento y predicciones en producción.
 
 ---
-📌 Con este flujo, la solución no solo detecta fraudes, sino que también se adapta al comportamiento real de los clientes, 
-creando un enfoque dinámico y robusto para la prevención.
-
+📌 **En resumen:** El sistema transforma datos de comportamiento en señales cuantitativas, entrena un modelo, 
+lo valida con métricas objetivas y lo despliega para predecir en tiempo real.
 ---
 
 ## 🛠️ Prerrequisitos
 
 Antes de ejecutar el proyecto, asegúrate de tener instalados los siguientes programas:
 
-1. **Python 3.10+** – Para ejecutar scripts y FastAPI.
-2. **PostgreSQL** – Base de datos local para almacenar transacciones y registros de clientes.
-3. **Git** – Para clonar el repositorio (opcional si ya tienes los archivos).
-4. **pip** – Para instalar las dependencias de Python.
-5. **psql** – Cliente de línea de comandos para ejecutar el script `schema.sql`.
+1. Python 3.10+ 
+2. PostgreSQL 
+3. pip y psql 
+4. Git (opcional para clonar el repo)
 
-📌 Nota: Se recomienda usar **Windows, Linux o Mac** y asegurarse de que Python y PostgreSQL estén en el PATH del sistema.
+📌 Importante: asegúrate de que Python y PostgreSQL estén en el PATH del sistema, sin importar si usas 
+Windows, Linux o MacOS.
 
 ---
 
-## ⚙️ Configuración del entorno
+## 🏗️ Configuración del entorno
 Sigue estos pasos para preparar el proyecto:
 
-1. **Crear entorno virtual** <br>
-   Crea y activa un entorno virtual para aislar las dependencias del proyecto:
-
+1. **Crear entorno virtual:**
 ```powershell
-python -m venv .venv
-.venv\Scripts\activate      # Windows
-# source .venv/bin/activate # Linux/Mac
+ python -m venv .venv
+ .venv\Scripts\activate      # Windows
+ # source .venv/bin/activate # Linux/Mac
 ```
 
-2. **Instalar dependencias** <br>
-Con el entorno virtual activo, instala las librerías necesarias:
-
+2. **Instalar dependencias:**
 ```powershell
-pip install -r requirements.txt
+ pip install -r requirements.txt
 ```
 
-3. **Crear base de datos y tablas en PostgreSQL** <br>
-Antes de ejecutar el proyecto, asegúrate de tener PostgreSQL corriendo localmente y de crear la base de datos y 
-las tablas necesarias. Para facilitar esto, el proyecto incluye un script SQL:
-
-Ejecuta el script `schema.sql` en tu base de datos local antes de correr la aplicación:
-
+3. **Crear base de datos y tablas:**
 ```bash
-psql -U <usuario> -d <nombre_base_datos> -f sql/schema.sql
+ psql -U <usuario> -d <nombre_base_datos> -f sql/schema.sql
 ```
+
 📌 **Nota:**
 * El usuario debe tener permisos para crear bases y tablas.
 * DATABASE_URL en `.env` debe apuntar a esta base de datos.
 
-4. **Variables de entorno** <br>
-Crea `.env `en la raíz del proyecto:
-
+4. **Configurar `.env:`**
 ```powershell
-DATABASE_URL=postgresql://user:password@host:port/db
-MODEL_DIR=models
-THRESHOLD=0.7
+ DATABASE_URL=postgresql://user:password@host:port/db
+ MODEL_DIR=models
+ THRESHOLD=0.7
 ```
-📌 **Notas:** <br>
-DATABASE_URL → Cadena de conexión a PostgreSQL. <br>
-MODEL_DIR → Ruta donde se almacenará el modelo entrenado. <br>
-THRESHOLD → Umbral de decisión para clasificar fraude/no fraude. <br>
 
-4. **(Opcional) Configurar PYTHONPATH**  <br>
-Si aparece el error: 
+5. **Entrenar modelo (opcional):**
+```powershell  
+ python -m scripts.train
+```
+
+6. **Ejecutar aplicación:**  
 ```bash
-ModuleNotFoundError: No module named 'scripts'
+ uvicorn main:app --reload
 ```
-Configura la variable de entorno `PYTHONPATH` apuntando a la raíz del proyecto.
 
----
-## 🚀 Entrenamiento del modelo
-
-```powershell
-python -m scripts.train
+Endpoint de predicción:
+```bash
+ POST http://127.0.0.1:8000/predict
 ```
-📌 **Notas:** Solo es necesario si cambias el THRESHOLD o los datos de entrenamiento.
-
 ---
-## 🚀 Ejecución de la aplicación
 
-```powershell
-uvicorn main:app --reload --log-level debug
-```
-Accede al endpoint a la aplicación:
-
-`POST http://127.0.0.1:8000/predict`
-
----
 ## 📦 Estructura del proyecto
 
 ```powershell
@@ -226,8 +218,30 @@ Esperado en respuesta:
 }
 ```
 ---
-## ✅ Notas
-Siempre activar el entorno virtual antes de ejecutar scripts o FastAPI.
-Ajustar el `.env` según tu base de datos y directorios de modelos.
-Para ejecutar desde PowerShell sin errores de importación, establecer PYTHONPATH a la raíz del proyecto.
-Testear con `pytest src/tests/` para verificar que todo funciona.
+## 📖 Glosario de términos clave
+ * **Machine Learning:** Rama de la inteligencia artificial que permite a los sistemas aprender de los datos y hacer 
+   predicciones sin ser programados explícitamente. En este proyecto se utiliza para detectar patrones de 
+   comportamiento y posibles fraudes.
+ * **Feature Engineering:** Proceso de transformación de los datos crudos en variables (features) útiles para el 
+   entrenamiento del modelo. Aquí se generan señales cuantitativas como `hour`, `weekday`, `response_rate`, etc.
+ * **Predicción:** Proceso en el que el modelo entrenado clasifica nuevos datos para determinar si corresponden a 
+   comportamiento normal o posible fraude.
+ * **RandomForestClassifier:** Algoritmo de clasificación basado en múltiples árboles de decisión, 
+   usado en este proyecto como modelo principal por su robustez y capacidad de manejar desbalance de clases.
+ * **ROC AUC (Receiver Operating Characteristic - Area Under Curve):** Métrica que mide la capacidad del modelo para 
+   distinguir entre clases (fraude vs. no fraude). Un valor cercano a 1 indica un mejor desempeño.
+ * **Precisión (Precision):** Proporción de casos predichos como positivos que realmente lo son. 
+   Evalúa qué tan “exactas” son las alertas generadas por el modelo.
+ * **Recall (Sensibilidad o Exhaustividad):** Proporción de positivos reales que fueron correctamente detectados 
+   por el modelo. Mide la capacidad de detectar fraudes sin que se escapen.
+ * **F1-Score:**  Métrica que combina precisión y recall en un solo valor armónico. Es útil cuando hay desbalance 
+   en las clases (fraude vs. no fraude).
+   👉 Un F1-score alto significa que el modelo detecta la mayoría de fraudes sin generar demasiados falsos positivos.
+ * **Threshold (Umbral de decisión):** Valor de corte de probabilidad para clasificar si una transacción es fraude (1) 
+   o no (0). Un umbral más bajo detecta más fraudes, pero aumenta falsos positivos.
+
+---
+## ✅ Notas finales
+ * Activa el entorno virtual antes de usar scripts o FastAPI. 
+ * Ajusta el `.env` según tu configuración. 
+ * Usa pytest src/tests/ para verificar que todo funciona.
