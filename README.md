@@ -1,7 +1,9 @@
 # 🔎 Proyecto: IA para Detección de Comportamiento Transaccional
-Este proyecto implementa un modelo de Machine Learning para la detección de transacciones sospechosas en función 
-del comportamiento del cliente. El objetivo es apoyar la detección temprana de fraude mediante el análisis de 
-variables transaccionales relevantes.
+El fraude hoy es cada vez más dinámico y sofisticado.  Las reglas fijas, que antes alcanzaban, ya no son suficientes.
+Por eso, este proyecto nace con el propósito de:
+* Detectar tempranamente comportamientos atípicos,
+* Fortalecer la gestión de fraude con Machine Learning,
+* Y apoyar la toma de decisiones para dar más confianza en los procesos de validación.
 
 ## 🚀 Descripción del Proyecto
 El sistema toma datos transaccionales almacenados en PostgreSQL, los procesa y entrena un modelo de Machine Learning.
@@ -92,6 +94,12 @@ Antes de ejecutar el proyecto, asegúrate de tener instalados los siguientes pro
 #### 📌 Importante: asegúrate de que Python y PostgreSQL estén en el PATH del sistema, sin importar si usas Windows, 
 Linux o MacOS.
 
+👉 Ejemplos de rutas que deben agregarse al PATH:
+* **Python** → C:\Users\<tu-usuario>\AppData\Local\Programs\Python\Python310\Scripts\
+* **PostgreSQL** → C:\Program Files\PostgreSQL\15\bin\
+
+Esto permite que `python`, `pip` y `psql` se ejecuten desde cualquier consola.
+
 ## 🚀 Instalación y requisitos
 1. **Clonar el repositorio:**
 ```bash
@@ -101,9 +109,17 @@ Linux o MacOS.
 
 2. **Crear entorno virtual:**
 ```powershell
+ # Crear entorno virtual
  python -m venv .venv
- .venv\Scripts\activate      # Windows
- # source .venv/bin/activate # Linux/Mac
+ 
+ # Activar entorno virtual
+ # Windows (PowerShell)
+ .venv\Scripts\activate      
+ 
+ # Windows (Git Bash) / Linux / MacOS
+ source .venv/Scripts/activate
+ # o
+ source .venv/bin/activate
 ```
 
 3. **Instalar dependencias:**
@@ -121,6 +137,7 @@ de crear la base de datos, las tablas necesarias, y ejecutar el script SQL inclu
 
 5. **Configurar `.env:`**
 ```powershell
+ # .env (ejemplo sin credenciales reales)
  DATABASE_URL=postgresql://user:password@host:port/db
  MODEL_DIR=models
  THRESHOLD=0.7
