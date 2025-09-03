@@ -233,19 +233,19 @@ Respuesta esperada:
 Payload de prueba (Fraude):
 ```powershell
 {
-  "client_id": "301",
-  "amount": 750000.00,
-  "tipo_transaccion": "compra",
-  "channel_code": "WEB",
-  "motor_monitoreo_map": "sospechoso",
-  "alert_type": "compra_monto_alto",
-  "dia_semana": 6,
-  "client_mobilePhone": "3211111111",
-  "response_text": "No",
-  "timestamp": "2025-08-27T14:30:00",
-  "total_sent": 15,
-  "response_rate": 0.1,
-  "mean_delay": 300
+  "client_id": "201",              // Identificador único del cliente
+  "amount": 150000,                // Monto de la transacción
+  "tipo_transaccion": "compra",    // Tipo de transacción (ej: compra, retiro, transferencia)
+  "channel_code": "WEB",           // Canal usado (WEB, ATM, APP, POS, etc.)
+  "motor_monitoreo_map": "normal", // Categoría de monitoreo asignada por reglas previas
+  "alert_type": "compra_estandar", // Tipo de alerta generada (ej: compra_estandar, alto_monto, etc.)
+  "dia_semana": 2,                 // Día de la semana (0=Lunes, 6=Domingo) → útil para patrones
+  "client_mobilePhone": "3202222222", // Teléfono del cliente (puede ser ruidoso si no aporta patrón)
+  "response_text": "Sí",           // Respuesta del cliente (ej: "Sí fui yo", "No reconozco")
+  "timestamp": "2025-08-25T10:00:00", // Fecha y hora de la transacción
+  "total_sent": 1,                 // Número de mensajes enviados al cliente
+  "response_rate": 1.0,            // Proporción de respuestas del cliente (0.0 a 1.0)
+  "mean_delay": 1000                 // Tiempo promedio de demora en responder (en minutos/segundos)
 }
 ```
 
@@ -254,10 +254,10 @@ Esperado en respuesta:
 ```powershell
 {
     "prediction": "fraude",
-    "probability": 0.07,
+    "probability": 0.27,
     "threshold_used": 0.7,
     "behavior_flags": {
-        "unusual_response_rate": true,
+        "unusual_response_rate": false,
         "unusual_mean_delay": true
     }
 }
